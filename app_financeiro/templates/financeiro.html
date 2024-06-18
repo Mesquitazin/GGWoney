@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'dashboard' %}
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <link href='https://unpkg.com/boxicons@2.1.2/css/boxicons.min.css' rel='stylesheet'>
+
+  <link rel="stylesheet" href="{% static 'financeiro/css/financeiro.css' %}">
+</head>
+<body>
+  <div class="container">
+  <main>
+    <h1>Financeiro</h1>
+    <div class="resume">
+      <div>
+        Entradas
+        <span class="incomes">R$ {{ total_incomes }}</span>
+    </div>
+    <div>
+        Saídas
+        <span class="expenses">R$ {{ total_expenses }}</span>
+    </div>
+    <div>
+        Total
+        <span class="total">R$ {{ total_balance }}</span>
+    </div>
+    </div>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="newItem">
+        {{ form.description }}
+        <div class="divAmount">
+          {{ form.amount }}
+        </div>
+        <div class="divType">
+          {{ form.type }}
+        </div>
+        <button type="submit" id="btnNew">Incluir</button>
+      </div>
+    </form>
+
+    <div class="search">
+        <form method="GET" action="{% url 'financeiro' %}">
+            <input type="text" id="inputSearch" placeholder="Pesquisar" name="query"/>
+            <button class="btnSearch" type="submit" id="btnSearch">Pesquisar</button>
+        </form>
+    </div>
+    <div class="divTable">
+      <table id="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Descrição</th>
+                    <th class="columnAmount">Valor</th>
+                    <th>Data</th>
+                    <th class="columnType">Tipo</th>
+                    <th class="columnAction"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr>
+                    <td>{{ transaction.id }}</td>
+                    <td>{{ transaction.description }}</td>
+                    <td>R$ {{ transaction.amount }}</td>
+                    <td>{{ transaction.date|date:"d-m-y - H:i:s" }}</td>
+                    <td class="columnType">
+                        {% if transaction.type == 'Entrada' %}
+                        <i class="bx bxs-chevron-up-circle"></i>
+                        {% else %}
+                        <i class="bx bxs-chevron-down-circle"></i>
+                        {% endif %}
+                    </td>
+                    <td class="columnAction">
+                        <a href="{% url 'delete_transaction' transaction.id %}"><i class='bx bx-trash'></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+  </main>
+  </div>
+</body>
+</html>
+{% endblock %}

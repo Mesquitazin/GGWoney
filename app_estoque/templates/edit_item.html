@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'dashboard' %}
+
+<link rel="stylesheet" href="{% static 'estoque/css/editar.css' %}">
+
+<div class="editar-body">
+    <h1>Editar Item</h1>
+    <form method="post">
+        {% csrf_token %}
+
+        <h6>Nome</h6>
+        {{ form.nome }}
+        <h6>Quantidade</h6>
+        {{ form.quantidade }}
+        <h6>Valor</h6>
+        {{ form.valor }}
+        <br>
+        <button type="submit">Salvar Alterações</button>
+    </form>
+    <a href="{% url 'estoque' %}">
+        <button type="button">Voltar</button>
+    </a>
+</div>
+
+<div id="error_message" style="color: red;">
+    {% if error %}
+        {{ error }}
+    {% endif %}
+</div>
+
+{% endblock %}

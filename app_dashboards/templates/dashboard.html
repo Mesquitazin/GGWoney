@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'dashboard' %}
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'dashboards/css/dashboards.css' %}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+
+    <div>
+        <h2>Dashboards Financeiro</h2>
+        <form method="GET">
+            {{ form.as_p }}
+            <button type="submit">Filtrar</button>
+        </form>
+    </div>
+
+    <div class="grafics">
+        <!-- Gráfico de Entrada -->
+        <div>
+            {{ entry_plot_div|safe }}
+        </div>
+
+        <!-- Gráfico de Saída -->
+        <div>
+            {{ exit_plot_div|safe }}
+        </div>
+
+        <!-- Novo Gráfico: Diferença entre Total de Entradas e Saídas por Mês -->
+        <div>
+            {{ monthly_diff_plot_div|safe }}
+        </div>
+    </div>
+
+</body>
+</html>
+
+{% endblock %}

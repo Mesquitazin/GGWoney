@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'dashboard' %}
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'estoque/css/estoque.css' %}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="{% static 'estoque/js/estoque.js' %}"></script>
+</head>
+<body class="container_estoque">
+    <h1>Estoque</h1>
+    <div class="container">
+        <div class="form">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="inputForms">
+                    {{ form.nome }}
+                    {{ form.quantidade }}
+                    {{ form.valor }}
+                    <button type="submit" class="adicionar">Adicionar Item</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="search">
+            <form method="GET" action="{% url 'estoque' %}">
+                <input type="text" id="inputSearch" placeholder="Pesquisar" name="query"/>
+                <button type="submit" class="pesquisar" id="btnSearch" onclick="search()">Pesquisar</button>
+            </form>
+            <div id="msgErro" style="color: red;">
+                {% if error_message %}
+                    {{ error_message }}
+                {% endif %}
+            </div>
+        </div>
+        <div id="mensagemErro" style="color: red;"></div>
+        <table id="estoque">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Quantidade</th>
+                    <th>Valor</th>
+                    <th>Data e Hora</th>
+                    <th class="columnExcluir"></th>
+                    <th class="columnEditar"></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.nome }}</td>
+                    <td>{{ item.quantidade }}</td>
+                    <td>{{ item.valor }}</td>
+                    <td>{{ item.data_adicao|date:"d-m-y - H:i:s" }}</td>
+                    <td class="columnEditar">
+                        <a class="editar" href="{% url 'edit_item_page' item.id %}"> Editar </a>
+                    </td>
+                    <td class="columnAction">
+                        <a href="{% url 'delete_item_page' item.id %}"><i class='bx bx-trash'></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
+{% endblock %}

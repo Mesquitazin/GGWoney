@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block 'dashboard' %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css">
+    <link rel="stylesheet" href="{% static 'config/css/config.css' %}">
+</head>
+<body>
+<h1>Cadastro Clientes</h1>
+<div class="divCadastro">
+    <form id="cadastro-form" method="POST">
+        {% csrf_token %}
+        {{ form.nome }}
+        <br>
+        {{ form.email }}
+        <br>
+        {{ form.cpf }}
+        <br>
+        {{ form.empresa }}
+        <br>
+        {{ form.login }}
+        <br>
+        <button type="submit" id="gerar-senha">Gerar Senha</button>
+    </form>
+</div>
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>CPF</th>
+                <th>Empresa</th>
+                <th>E-Mail</th>
+                <th>Login</th>
+                <th>Senha</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for cliente in clientes %}
+                <tr>
+                    <td>{{ cliente.nome }}</td>
+                    <td>{{ cliente.cpf }}</td>
+                    <td>{{ cliente.empresa }}</td>
+                    <td>{{ cliente.email }}</td>
+                    <td>{{ cliente.login }}</td>
+                    <td class="password-cell">
+                        <i class="far fa-eye" id="eye-icon-{{ cliente.id }}" onclick="togglePasswordVisibility('{{ cliente.id }}')"></i>
+                        <span id="password-content-{{ cliente.id }}" style="display: none;">{{ cliente.senha }}</span>
+                    </td>
+                    <td class="columnAction">
+                        <a href="{% url 'delete_user' cliente.id %}"><i class='bx bx-trash'></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<script src="{% static 'config/js/config.js' %}"></script>
+
+<script>
+    function togglePasswordVisibility(clienteId) {
+        var icon = document.getElementById('eye-icon-' + clienteId);
+        var content = document.getElementById('password-content-' + clienteId);
+
+        if (icon && content) {
+            if (content.style.display !== 'none') {
+                content.style.display = 'none';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            } else {
+                content.style.display = 'inline';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            }
+        }
+    }
+</script>
+</body>
+</html>
+{% endblock %}
